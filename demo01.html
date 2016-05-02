@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>d3</title>
+    <script type="text/javascript" src="js/jquery.1.9.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset = "utf-8"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        .axis path,.axis line{
+            fill:none;
+            stroke:black;
+            shape-rendering:crispEdges;
+        }
+        .axis text{
+            font-family:sans-serif;
+            font-size:11px;
+        }
+        svg{
+            padding:0px;
+            margin:20px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">welcome</header>
+    <div class="container">
+        <div class="row">
+            <div class = "col-md-4">show</div>
+            <div class = "col-md-4">me</div>
+            <div class = "col-md-4">the</div>
+        </div>
+        <div class = "row">
+            <script>
+                var width = 500;
+                var height = 300;
+                var rectHeight = 100;
+                var svg = d3.select("div").select("div").append("svg").attr("width",width).attr("height",height);
+                var padding={left:30,right:30,top:30,bottom:30};
+
+                var rectPadding = 4 ;
+
+
+
+                var dataset = [30,10,43,55,13,45];
+                var xScale  = d3.scale.ordinal().domain(d3.range(dataset.length)).rangeRoundBands([0,width-padding.left-padding.right]);
+                var yScale  = d3.scale.linear().domain([0,d3.max(dataset)]).range([height-padding.top-padding.bottom,0])
+                var linear = d3.scale.linear()
+                .domain([0, d3.max(dataset)])
+                .range([0, 250]);
+                var rects = svg.selectAll(".MyRect").data(dataset).enter().append("rect")
+                .attr("class","MyRect")
+                .attr("transform","translate("+padding.left + "," + padding.top + ")")
+                .attr("x", function(d,i){
+                return xScale(i) + rectPadding/2;
+                 } )
+                .attr("y",function(d){
+                return yScale(d);
+                })
+                .attr("width", xScale.rangeBand() - rectPadding )
+                .attr("height", function(d){
+                 return height - padding.top - padding.bottom - yScale(d);
+                })
+                .on("click",function(d,i){
+                    d3.select(this).transition().duration(500).attr("fill","green")
+                });//draw the rect
+                var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+                var yAxis = d3.svg.axis().scale(yScale).orient("left");
+                svg.append("g").attr("class","axis").attr("transform","translate(" + padding.left + "," + (height - padding.bottom  ) + ")").call(xAxis);
+                svg.append("g").attr("class","axis").attr("transform","translate(" + padding.left + "," + padding.top + ")").call(yAxis);
+                alert(xScale.rangeBand());
+            </script>
+        </div>
+    </div>
+    <footer></footer>
+</body>
+</html>
